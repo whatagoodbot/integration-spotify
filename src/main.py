@@ -13,6 +13,8 @@ client_id = 'spotify-client'
 username = os.environ.get('MQTT_USERNAME')
 password = os.environ.get('MQTT_PASSWORD')
 mqtt_topics = ['relink', 'genres']
+
+
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
         if rc != 0:
@@ -24,24 +26,28 @@ def connect_mqtt() -> mqtt_client:
     client.connect(broker, port)
     return client
 
+
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         envLength = len(environment) + 1
         print(msg.topic[envLength:len(msg.topic)])
-        payload=json.loads(str(msg.payload.decode('utf-8','ignore')))
+        payload = json.loads(str(msg.payload.decode('utf-8', 'ignore')))
         if msg.topic[envLength:len(msg.topic)] == 'relink':
-          client.publish(f'{environment}/broadcast', json.dumps(relink(payload['trackId'], payload['meta'])))
+            client.publish(f'{environment}/broadcast', json.dumps(relink(payload['trackId'], payload['meta'])))
         elif msg.topic[envLength:len(msg.topic)] == 'genres':
-          client.publish(f'{environment}/broadcast', json.dumps(genre(payload['trackId'], payload['meta'])))
+            client.publish(f'{environment}/broadcast', json.dumps(genre(payload['trackId'], payload['meta'])))
 
     for topic in mqtt_topics:
-      client.subscribe(f'{environment}/{topic}')
-      print(f'Subscribed to {environment}/{topic}')
+        client.subscribe(f'{environment}/{topic}')
+        print(f'Subscribed to {environment}/{topic}')
+
     client.on_message = on_message
+
 
 def run():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
+
 
 run()
