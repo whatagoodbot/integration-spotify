@@ -9,4 +9,4 @@ COPY . .
 
 RUN echo $SPOTIPY_CACHE > .cache-spotifyusername
 
-CMD [ "python3", "main.py"]
+CMD [ "python3", "src/main.py"]
