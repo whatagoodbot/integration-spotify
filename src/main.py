@@ -9,7 +9,7 @@ load_dotenv()
 broker = os.environ.get('MQTT_HOSTNAME')
 port = int(os.environ.get('MQTT_PORT'))
 environment = os.environ.get('PYTHON_ENV')
-client_id = 'spotify-client'
+client_id = 'spotify-client_dev'
 username = os.environ.get('MQTT_USERNAME')
 password = os.environ.get('MQTT_PASSWORD')
 mqtt_topics = ['relink', 'genres']
@@ -17,7 +17,9 @@ mqtt_topics = ['relink', 'genres']
 
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
-        if rc != 0:
+        if rc == 0:
+            print('Connected')
+        else:
             print('Failed to connect, return code %d\n', rc)
 
     client = mqtt_client.Client(client_id)
@@ -30,7 +32,6 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         envLength = len(environment) + 1
-        print(msg.topic[envLength:len(msg.topic)])
         payload = json.loads(str(msg.payload.decode('utf-8', 'ignore')))
         if msg.topic[envLength:len(msg.topic)] == 'relink':
             client.publish(f'{environment}/broadcast', json.dumps(relink(payload['trackId'], payload['meta'])))
@@ -44,7 +45,15 @@ def subscribe(client: mqtt_client):
     client.on_message = on_message
 
 
+def writeSpotipyCacheFile():
+    text_file = open('.cache-whatAGoodBot', 'w')
+    text_file.write(os.environ.get('SPOTIPY_CACHE'))
+    text_file.close()
+
+
 def run():
+    print('Starting spotify-clinet version 1.0.0')
+    writeSpotipyCacheFile()
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()

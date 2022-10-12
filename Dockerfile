@@ -7,6 +7,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-RUN echo $SPOTIPY_CACHE > .cache-whatAGoodBot
-
 CMD [ "python3", "src/main.py"]
