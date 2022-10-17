@@ -12,14 +12,12 @@ environment = os.environ.get('PYTHON_ENV')
 client_id = 'spotify-client_dev'
 username = os.environ.get('MQTT_USERNAME')
 password = os.environ.get('MQTT_PASSWORD')
-mqtt_topics = ['relink', 'genres']
+mqtt_topics = ['externalRequest']
 
 
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print('Connected')
-        else:
+        if rc != 0:
             print('Failed to connect, return code %d\n', rc)
 
     client = mqtt_client.Client(client_id)
@@ -33,10 +31,11 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         envLength = len(environment) + 1
         payload = json.loads(str(msg.payload.decode('utf-8', 'ignore')))
-        if msg.topic[envLength:len(msg.topic)] == 'relink':
-            client.publish(f'{environment}/broadcast', json.dumps(relink(payload['trackId'], payload['meta'])))
-        elif msg.topic[envLength:len(msg.topic)] == 'genres':
-            client.publish(f'{environment}/broadcast', json.dumps(genre(payload['trackId'], payload['meta'])))
+        if payload['service'] == 'spotify-client':
+            if payload['name'] == 'relink':
+                client.publish(f'{environment}/broadcast', json.dumps(relink(payload['meta']['trackId'], payload['meta'])))
+            elif payload['name'] == 'genre':
+                client.publish(f'{environment}/broadcast', json.dumps(genre(payload['meta']['trackId'], payload['meta'])))
 
     for topic in mqtt_topics:
         client.subscribe(f'{environment}/{topic}')
@@ -52,7 +51,7 @@ def writeSpotipyCacheFile():
 
 
 def run():
-    print('Starting spotify-clinet version 1.0.0')
+    print('Starting spotify-clinet version 2.0.0')
     writeSpotipyCacheFile()
     client = connect_mqtt()
     subscribe(client)

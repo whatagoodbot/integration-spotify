@@ -21,18 +21,18 @@ def relink(trackId, meta):
                 differencesPositive = [filteredMarket for filteredMarket in filteredMarkets
                                        if filteredMarket['code'] in availableMarkets]
                 marketString = ', '.join(list(map(diffMap, differencesPositive)))
-                return { 'messageId': meta.messageId, 'message': f'This song is only available in {marketString}', 'meta': meta}
+                return { 'messageId': meta['messageId'], 'message': f'This song is only available in {marketString}', 'meta': meta}
             else:
                 marketString = ', '.join(list(map(diffMap, differences)))
-                return { 'messageId': meta.messageId, 'message': f'This song isn\'t available in {marketString}', 'meta': meta}
+                return { 'messageId': meta['messageId'], 'message': f'This song isn\'t available in {marketString}', 'meta': meta}
         else:
-            return { 'messageId': meta.messageId, 'message': 'This song should be available for everyone in the room.', 'meta': meta}
+            return { 'messageId': meta['messageId'], 'message': 'This song should be available for everyone in the room.', 'meta': meta}
 
 
 def genre(trackId, meta):
     artistInfo = getGenre(trackId)
     return {
-      'messageId': meta.messageId,
+      'messageId': meta['messageId'],
       'message': f"Spotify describes {artistInfo['name']} as {', '.join(artistInfo['genres'])}",
       'meta': meta
     }
