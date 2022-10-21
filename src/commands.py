@@ -1,5 +1,5 @@
 import json
-from spotify import getAvailableMarkets, getGenre
+from spotify import getAvailableMarkets, getGenre, getRecommendations
 
 
 def diffMap(diff):
@@ -34,3 +34,7 @@ def genre(payload):
     artistInfo = getGenre(payload['nowPlaying']['id'])
     payload['message'] = f"Spotify describes {artistInfo['name']} as {', '.join(artistInfo['genres'])}"
     return payload
+
+def getPlaylist(seed_tracks):
+    recommendations = getRecommendations(seed_tracks)
+    return recommendations['tracks']

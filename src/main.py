@@ -3,7 +3,7 @@ import json
 import uuid
 from paho.mqtt import client as mqtt_client
 from dotenv import load_dotenv
-from commands import relink, genre
+from commands import relink, genre, getPlaylist
 
 load_dotenv()
 
@@ -32,10 +32,20 @@ def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         payload = json.loads(str(msg.payload.decode('utf-8', 'ignore')))
         if payload['service'] == 'spotify-client':
-            if payload['name'] == 'relink':
-                client.publish(f'{environment}/broadcast', json.dumps(relink(payload)))
-            elif payload['name'] == 'genre':
-                client.publish(f'{environment}/broadcast', json.dumps(genre(payload)))
+            if payload['nowPlaying']['provider'] == 'spotify':
+                if payload['name'] == 'relink':
+                    client.publish(f'{environment}/broadcast', json.dumps(relink(payload)))
+                elif payload['name'] == 'genre':
+                    client.publish(f'{environment}/broadcast', json.dumps(genre(payload)))
+                elif payload['name'] == 'seeds':
+                    if payload['client'] == 'goodbot-ttl':
+                        payload['service'] = payload['client']
+                        payload['name'] = 'updateBotPlaylist'
+                        payload['nextTracks'] = getPlaylist(payload['seedTracks'])
+                        client.publish(f'{environment}/externalRequest', json.dumps(payload))
+            else:
+                payload['message'] = "This song isn't provided by Spotify"
+                client.publish(f'{environment}/broadcast', json.dumps(payload))
 
     for topic in mqtt_topics:
         client.subscribe(f'{environment}/{topic}')

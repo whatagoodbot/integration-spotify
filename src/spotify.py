@@ -27,6 +27,10 @@ def getGenre(trackId):
     spotifyTrack = sp.track(trackId)
     return sp.artist(spotifyTrack['artists'][0]['uri'])
 
+def getRecommendations(seeds):
+    sp = spotipy_login()
+    return sp.recommendations(seed_tracks=seeds)
+
 
 def getAvailableMarkets(trackId):
     sp = spotipy_login()
