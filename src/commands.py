@@ -6,8 +6,8 @@ def diffMap(diff):
     return diff['name']
 
 
-def relink(trackId, meta):
-    availableMarkets = getAvailableMarkets(trackId)
+def relink(payload):
+    availableMarkets = getAvailableMarkets(payload['nowPlaying']['id'])
     if len(availableMarkets) == 0:
         print('No Info')
     else:
@@ -21,18 +21,16 @@ def relink(trackId, meta):
                 differencesPositive = [filteredMarket for filteredMarket in filteredMarkets
                                        if filteredMarket['code'] in availableMarkets]
                 marketString = ', '.join(list(map(diffMap, differencesPositive)))
-                return { 'messageId': meta['messageId'], 'message': f'This song is only available in {marketString}', 'meta': meta}
+                payload['message'] = f"This song is only available in {marketString}"
             else:
                 marketString = ', '.join(list(map(diffMap, differences)))
-                return { 'messageId': meta['messageId'], 'message': f'This song isn\'t available in {marketString}', 'meta': meta}
+                payload['message'] = f"This song isn't available in {marketString}"
         else:
-            return { 'messageId': meta['messageId'], 'message': 'This song should be available for everyone in the room.', 'meta': meta}
+            payload['message'] = "This song should be available for everyone in the room."
+        return payload
 
 
-def genre(trackId, meta):
-    artistInfo = getGenre(trackId)
-    return {
-      'messageId': meta['messageId'],
-      'message': f"Spotify describes {artistInfo['name']} as {', '.join(artistInfo['genres'])}",
-      'meta': meta
-    }
+def genre(payload):
+    artistInfo = getGenre(payload['nowPlaying']['id'])
+    payload['message'] = f"Spotify describes {artistInfo['name']} as {', '.join(artistInfo['genres'])}"
+    return payload
