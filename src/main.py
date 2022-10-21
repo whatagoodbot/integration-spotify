@@ -44,8 +44,9 @@ def subscribe(client: mqtt_client):
                         payload['nextTracks'] = getPlaylist(payload['seedTracks'])
                         client.publish(f'{environment}/externalRequest', json.dumps(payload))
             else:
-                payload['message'] = "This song isn't provided by Spotify"
-                client.publish(f'{environment}/broadcast', json.dumps(payload))
+                if payload['name'] != 'seeds':
+                    payload['message'] = "Sorry, the details about the song I've been given aren't for Spotify"
+                    client.publish(f'{environment}/broadcast', json.dumps(payload))
 
     for topic in mqtt_topics:
         client.subscribe(f'{environment}/{topic}')
