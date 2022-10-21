@@ -35,7 +35,7 @@ def subscribe(client: mqtt_client):
             if payload['nowPlaying']['provider'] == 'spotify':
                 if payload['name'] == 'relink':
                     client.publish(f'{environment}/broadcast', json.dumps(relink(payload)))
-                elif payload['name'] == 'genre':
+                elif payload['name'] == 'genre' or payload['name'] == 'askbeav':
                     client.publish(f'{environment}/broadcast', json.dumps(genre(payload)))
                 elif payload['name'] == 'seeds':
                     if payload['client'] == 'goodbot-ttl':
