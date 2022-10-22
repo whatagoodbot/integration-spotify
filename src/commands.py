@@ -1,5 +1,5 @@
 import json
-from spotify import getAvailableMarkets, getGenre, getRecommendations
+from spotify import getAvailableMarkets, getGenre, getRecommendations, addToPlaylist
 
 
 def diffMap(diff):
@@ -38,3 +38,11 @@ def genre(payload):
 def getPlaylist(seed_tracks):
     recommendations = getRecommendations(seed_tracks)
     return recommendations['tracks']
+
+
+def addTrackToPlaylist(payload):
+    if payload['reaction'] == 'star':
+        if payload['nowPlaying']['provider'] == 'spotify':
+            if payload['room']['spotify']:
+                if payload['room']['spotify']['enabled'] and payload['room']['spotify']['starredPlaylist']:
+                    addToPlaylist(payload['room']['spotify']['starredPlaylist'], payload['nowPlaying']['id'])

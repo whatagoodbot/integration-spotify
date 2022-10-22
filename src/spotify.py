@@ -36,3 +36,8 @@ def getAvailableMarkets(trackId):
     sp = spotipy_login()
     spotifyTrack = sp.track(trackId)
     return spotifyTrack['available_markets']
+
+
+def addToPlaylist(playlistId, trackId):
+    sp = spotipy_login()
+    sp.playlist_add_items(playlistId, [trackId])
