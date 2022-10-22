@@ -3,6 +3,8 @@ import spotipy
 import spotipy.util as util
 from dotenv import load_dotenv
 
+import json
+
 load_dotenv()
 
 
@@ -40,4 +42,9 @@ def getAvailableMarkets(trackId):
 
 def addToPlaylist(playlistId, trackId):
     sp = spotipy_login()
-    sp.playlist_add_items(playlistId, [trackId])
+    playlist = sp.playlist(playlistId)
+    if [item for item in playlist['tracks']['items'] if item['track']['id'] == trackId]:
+        print(f"Skipped {trackId}")
+    else:
+        sp.playlist_add_items(playlistId, [trackId])
+        print(f"Added {trackId}")
