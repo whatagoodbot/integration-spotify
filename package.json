@@ -1,0 +1,37 @@
+{
+  "name": "integration-spotify",
+  "version": "4.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -r dotenv/config src/index.js",
+    "prod": "NODE_ENV=production nodemon -r dotenv/config src/index.js",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "start": "node src/index.js",
+    "test": "npm run lint && nyc --reporter=html --reporter=text mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "standard": {
+    "env": [
+      "mocha"
+    ]
+  },
+  "dependencies": {
+    "@whatagoodbot/mqtt": "^4.0.0",
+    "@whatagoodbot/rpc": "^2.0.0",
+    "@whatagoodbot/utilities": "^1.0.0",
+    "spotify-web-api-node": "^5.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.2",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.19",
+    "nyc": "^15.1.0",
+    "standard": "^17.0.0"
+  }
+}
