@@ -12,7 +12,7 @@ const subscribe = () => {
     broker.client.subscribe(`${topicPrefix}${topic}`, (err) => {
       logger.info(`Subscribed to ${topicPrefix}${topic}`)
       if (err) {
-        logger.error(error)
+        logger.error(err)
         logger.debug({ topic })
       }
     })
@@ -25,9 +25,7 @@ if (broker.client.connected) {
   broker.client.on('connect', subscribe)
 }
 
-broker.client.on('error', (err) => {
-  logger.error(error)
-})
+broker.client.on('error', logger.error)
 
 broker.client.on('message', async (fullTopic, data) => {
   const functionName = 'receivedMessage'

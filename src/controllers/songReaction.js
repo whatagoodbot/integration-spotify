@@ -14,7 +14,7 @@ export default async (payload, spotify) => {
       spotify.addToPlaylist(payload.room.spotify.starredPlaylist, [payload.nowPlaying.uri])
       metrics.trackExecution(functionName, 'function', performance.now() - startTime, true)
       logger.debug({ event: functionName })
-        } else {
+    } else {
       logger.debug({ event: 'Restarred Song' })
       metrics.count('restarredSong')
     }

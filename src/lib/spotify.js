@@ -1,16 +1,7 @@
-import { logger, metrics } from '@whatagoodbot/utilities'
+import { logger } from '@whatagoodbot/utilities'
 import SpotifyWebApi from 'spotify-web-api-node'
 
-const scopes = [
-  'playlist-modify-public',
-  'playlist-read-private',
-  'user-follow-read',
-  'user-read-private',
-  'user-read-recently-played',
-  'playlist-modify-private'
-]
 const redirectUri = 'http://whatagoodbot.com/test-callback'
-
 
 export default class SpotifyClient {
   constructor (clientId, clientSecret) {
@@ -27,9 +18,9 @@ export default class SpotifyClient {
   setAccessToken () {
     const self = this
     this.api.refreshAccessToken()
-    .then(data => {
+      .then(data => {
         logger.debug('The access token has been refreshed!')
-        self.api.setAccessToken(data.body['access_token'])
+        self.api.setAccessToken(data.body.access_token)
         if (self.refreshAccessToken) {
           clearTimeout(self.refreshAccessToken)
           self.refreshAccessToken = undefined
