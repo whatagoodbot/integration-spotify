@@ -8,7 +8,8 @@ export default async (payload, spotify) => {
   if (!payload.seedTracks) return
   payload.service = payload.client.name
   payload.command = 'updateBotPlaylist'
-  payload.nextTracks = await spotify.getRecommendations({ seed_tracks: payload.seedTracks })
+  const spotifyResults = await spotify.getRecommendations({ seed_tracks: payload.seedTracks })
+  payload.nextTracks = spotifyResults.tracks
 
   metrics.trackExecution(functionName, 'mqtt', performance.now() - startTime, true)
 
