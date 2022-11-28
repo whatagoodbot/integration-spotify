@@ -7,7 +7,7 @@ export default class SpotifyClient {
   constructor (clientId, clientSecret) {
     this.api = new SpotifyWebApi({ clientId, clientSecret, redirectUri })
     this.refreshAccessToken = null
-    this.api.setRefreshToken(process.env.TOKEN_EXTERNAL_SPOTIFY || 'AQCHYf3upvrAUuGSOlxFnkJ4by857MVgu8qZnlrGZymvcTgjsnW76W7FcCCojs6N4sP9MfLlau-fFaHQlo8n42TTi-GGjF10hXs5Z0417TVQzclF4pcYmbVlgddTyjsKigU')
+    this.api.setRefreshToken(process.env.TOKEN_EXTERNAL_SPOTIFY)
     this.setAccessToken()
   }
 
