@@ -40,4 +40,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: whatagoodbot/integration-spotify:4.0.0
+          tags: whatagoodbot/integration-spotify:latest,whatagoodbot/integration-spotify:4.0.1

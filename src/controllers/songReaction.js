@@ -9,7 +9,7 @@ export default async (payload, spotify) => {
     logger.debug({ event: functionName })
     metrics.count(functionName)
     const starredTracks = await spotify.getPlaylist(payload.room.spotify.starredPlaylist)
-    const starredTrackIds = starredTracks.items.map(starredTrack => starredTrack.track.uri)
+    const starredTrackIds = starredTracks.tracks.items.map(starredTrack => starredTrack.track.uri)
     if (!starredTrackIds.includes(payload.nowPlaying.uri)) {
       spotify.addToPlaylist(payload.room.spotify.starredPlaylist, [payload.nowPlaying.uri])
       metrics.trackExecution(functionName, 'function', performance.now() - startTime, true)
